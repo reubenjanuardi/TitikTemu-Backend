@@ -7,7 +7,7 @@ const router = express.Router();
 const authProxy = createProxyMiddleware({
   target: process.env.AUTH_SERVICE_URL,
   changeOrigin: true,
-  pathRewrite: { '^/api/auth': '/auth' },
+  pathRewrite: { '^/': '/auth/' },
 });
 
 // Public routes (no JWT required)
