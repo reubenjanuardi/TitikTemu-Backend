@@ -1,18 +1,35 @@
 // Event Service
+const Event = require("../models/event.model");
+const EventStatus = require("../models/event_status.model");
+
 module.exports = {
   createEvent: async (eventData) => {
-    // Create event business logic
+    if (!EventStatus.isValidStatus(eventData.status)) {
+      throw new Error(`Invalid status: ${eventData.status}`);
+    }
+
+    return await Event.create(eventData);
   },
-  getAllEvents: async () => {
-    // Get all events business logic
+
+  getAllEvents: async (filters = {}) => {
+    return await Event.findAll(filters);
   },
+
   getEventById: async (eventId) => {
-    // Get event by ID business logic
+    return await Event.findById(eventId);
   },
+
   updateEvent: async (eventId, updateData) => {
-    // Update event business logic
+    // Validate status if provided
+    if (updateData.status && !EventStatus.isValidStatus(updateData.status)) {
+      throw new Error(`Invalid status: ${updateData.status}`);
+    }
+
+    return await Event.update(eventId, updateData);
   },
+
   deleteEvent: async (eventId) => {
-    // Delete event business logic
-  }
+    return await Event.delete(eventId);
+  },
 };
+

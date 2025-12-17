@@ -1,12 +1,31 @@
 // Attendance Service
+const Attendance = require("../models/attendance.model");
+
 module.exports = {
   recordAttendance: async (attendanceData) => {
-    // Record attendance business logic
+    // Check if user already checked in for this event
+    const exists = await Attendance.exists(
+      attendanceData.eventId,
+      attendanceData.userId
+    );
+
+    if (exists) {
+      throw new Error("User has already checked in for this event");
+    }
+
+    return await Attendance.create(attendanceData);
   },
+
   getAttendanceByEvent: async (eventId) => {
-    // Get attendance by event business logic
+    return await Attendance.findByEventId(eventId);
   },
+
   getAttendanceStats: async (eventId) => {
-    // Get attendance statistics business logic
-  }
+    return await Attendance.getStatsByEventId(eventId);
+  },
+
+  getAttendanceByUser: async (userId) => {
+    return await Attendance.findByUserId(userId);
+  },
 };
+
